@@ -1,116 +1,25 @@
-# Python
-
-**pycache**/
+__pycache__/
 *.py[cod]
-*$py.class
-
-# Virtual Environment
-
-venv/
-env/
-ENV/
-
-# Jupyter Notebook Checkpoints
-
-.ipynb_checkpoints/
-
-# Environment Variables
-
-.env
-.env.*
-
-# VS Code
-
-.vscode/
-
-# PyCharm
-
-.idea/
-
-# Streamlit
-
-.streamlit/secrets.toml
-
-# Logs
-
-*.log
-
-# OS Files
-
-.DS_Store
-Thumbs.db
-
-# Build Files
-
+*.egg-info/
 build/
 dist/
-*.egg-info/
 
-# Python Packaging
+venv/
+.venv/
+.env
 
-*.egg
-*.whl
-
-# Test Coverage
-
-.coverage
-htmlcov/
+.ipynb_checkpoints/
 .pytest_cache/
-
-# Database Files
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
 
 *.db
 *.sqlite3
+*.log
 
-# Model Files (Optional)
-
-# Uncomment if models are large
-
-# models/*.pkl
-
-# Temporary Files
-
-temp/
-tmp/
-
-# Uploaded Files
-
-uploads/
-
-# Render Deployment
-
-.render/
-
-# Supabase Local
-
-.supabase/
-
-# Jupyter Runtime
-
-.jupyter/
-
-# Cache
-
-.cache/
-
-# MyPy
-
-.mypy_cache/
-
-# Ruff
-
-.ruff_cache/
-
-# Notebook Exports
-
-*.html
-
-# Secrets
-
-secrets.json
-credentials.json
-
-# Generated Reports
-
-results/
-reports/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
