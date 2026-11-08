@@ -69,9 +69,8 @@ def train(df_expenses=None, budgets=None):
 def main(models_dir=MODELS_DIR, results_dir=RESULTS_DIR):
     pipeline, metrics = train()
     save_model(pipeline, OVERSPEND_MODEL, OVERSPEND_FEATURES, metrics, models_dir, results_dir)
-    print(json.dumps(metrics, indent=2))
     return metrics
 
 
 if __name__ == "__main__":
-    main()
+    print(json.dumps(main(), indent=2))

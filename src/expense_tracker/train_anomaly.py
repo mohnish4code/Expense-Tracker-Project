@@ -94,9 +94,8 @@ def main(models_dir=MODELS_DIR, results_dir=RESULTS_DIR):
     model, metrics = train()
     features = ANOMALY_FEATURES + ["Is Recurring (routes to recurring rule)"]
     save_model(model, ANOMALY_MODEL, features, metrics, models_dir, results_dir)
-    print(json.dumps(metrics, indent=2))
     return metrics
 
 
 if __name__ == "__main__":
-    main()
+    print(json.dumps(main(), indent=2))

@@ -11,7 +11,7 @@ from backend.routers import budgets, expenses, insights, predict
 from expense_tracker.config import MODELS_DIR, RESULTS_DIR
 
 
-def create_app(database_url=None, secret_key=None, models_dir=MODELS_DIR, results_dir=RESULTS_DIR):
+def create_app(database_url=None, secret_key=None, models_dir=MODELS_DIR, results_dir=RESULTS_DIR, seed_demo=True):
     load_dotenv()
     database_url = database_url or os.getenv("DATABASE_URL") or DEFAULT_DATABASE_URL
     secret_key = secret_key or os.getenv("SECRET_KEY")
@@ -21,7 +21,7 @@ def create_app(database_url=None, secret_key=None, models_dir=MODELS_DIR, result
 
     @asynccontextmanager
     async def lifespan(app):
-        startup.run(app)
+        startup.run(app, seed=seed_demo)
         yield
         app.state.engine.dispose()
 
