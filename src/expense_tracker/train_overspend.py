@@ -1,13 +1,15 @@
-import joblib
+import json
+
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-from expense_tracker.config import MODELS_DIR, OVERSPEND_MODEL, SEED
+from expense_tracker.config import MODELS_DIR, OVERSPEND_MODEL, RESULTS_DIR, SEED
 from expense_tracker.data import load_budgets, load_expenses
 from expense_tracker.features import OVERSPEND_FEATURES, overspend_dataset
+from expense_tracker.predict import save_model
 
 TEST_MONTHS = 3
 
@@ -64,11 +66,10 @@ def train(df_expenses=None, budgets=None):
     return pipeline, metrics
 
 
-def main(models_dir=MODELS_DIR):
+def main(models_dir=MODELS_DIR, results_dir=RESULTS_DIR):
     pipeline, metrics = train()
-    models_dir.mkdir(parents=True, exist_ok=True)
-    joblib.dump(pipeline, models_dir / f"{OVERSPEND_MODEL}.joblib")
-    print(metrics)
+    save_model(pipeline, OVERSPEND_MODEL, OVERSPEND_FEATURES, metrics, models_dir, results_dir)
+    print(json.dumps(metrics, indent=2))
     return metrics
 
 

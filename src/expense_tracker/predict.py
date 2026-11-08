@@ -1,11 +1,38 @@
+import json
+from datetime import UTC, datetime
+
 import joblib
 import numpy as np
 import pandas as pd
+import sklearn
 
-from expense_tracker.config import ANOMALY_MODEL, MODELS_DIR, OVERSPEND_MODEL
+from expense_tracker.config import ANOMALY_MODEL, MODELS_DIR, OVERSPEND_MODEL, RESULTS_DIR
 from expense_tracker.features import ANOMALY_FEATURES, OVERSPEND_FEATURES, cutoff_features
 
 RECURRING_Z_LIMIT = 3.5
+
+
+def save_model(model, name, features, metrics, models_dir=MODELS_DIR, results_dir=RESULTS_DIR):
+    models_dir.mkdir(parents=True, exist_ok=True)
+    joblib.dump(model, models_dir / f"{name}.joblib", compress=3)
+    meta = {
+        "name": name,
+        "sklearn_version": sklearn.__version__,
+        "trained_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        "features": features,
+        "metrics": metrics,
+    }
+    (models_dir / f"{name}.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    results_dir.mkdir(parents=True, exist_ok=True)
+    metrics_path = results_dir / "metrics.json"
+    all_metrics = json.loads(metrics_path.read_text(encoding="utf-8")) if metrics_path.exists() else {}
+    all_metrics[name] = metrics
+    metrics_path.write_text(json.dumps(all_metrics, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def models_exist(models_dir=MODELS_DIR):
+    return all((models_dir / f"{name}.joblib").exists() for name in (ANOMALY_MODEL, OVERSPEND_MODEL))
 
 
 def load_models(models_dir=MODELS_DIR):

@@ -1,4 +1,5 @@
-import joblib
+import json
+
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
@@ -7,10 +8,10 @@ from sklearn.metrics import f1_score, precision_score, recall_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-from expense_tracker.config import ANOMALY_MODEL, MODELS_DIR, SEED
+from expense_tracker.config import ANOMALY_MODEL, MODELS_DIR, RESULTS_DIR, SEED
 from expense_tracker.data import load_expenses
 from expense_tracker.features import ANOMALY_FEATURES, CategoryAmountFeatures, robust_stats
-from expense_tracker.predict import flag_anomalies
+from expense_tracker.predict import flag_anomalies, save_model
 
 TEST_MONTHS = 3
 RECURRING_SHARE = 0.8
@@ -89,11 +90,11 @@ def train(df_expenses=None):
     return fit_model(df_expenses), metrics
 
 
-def main(models_dir=MODELS_DIR):
+def main(models_dir=MODELS_DIR, results_dir=RESULTS_DIR):
     model, metrics = train()
-    models_dir.mkdir(parents=True, exist_ok=True)
-    joblib.dump(model, models_dir / f"{ANOMALY_MODEL}.joblib")
-    print(metrics)
+    features = ANOMALY_FEATURES + ["Is Recurring (routes to recurring rule)"]
+    save_model(model, ANOMALY_MODEL, features, metrics, models_dir, results_dir)
+    print(json.dumps(metrics, indent=2))
     return metrics
 
 

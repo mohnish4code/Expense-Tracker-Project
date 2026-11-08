@@ -1,0 +1,41 @@
+{
+  "anomaly": {
+    "train_rows": 585,
+    "test_rows": 176,
+    "injected_anomalies": 16,
+    "model": {
+      "precision": 0.652,
+      "recall": 0.938,
+      "f1": 0.769
+    },
+    "baseline_category_zscore": {
+      "precision": 0.778,
+      "recall": 0.875,
+      "f1": 0.824
+    },
+    "recurring_categories": [
+      "Rent",
+      "Savings & Investment",
+      "Subscriptions & Digital",
+      "Utilities"
+    ]
+  },
+  "overspend": {
+    "train_rows": 378,
+    "test_rows": 126,
+    "train_positive_rate": 0.476,
+    "test_positive_rate": 0.452,
+    "model": {
+      "precision": 0.883,
+      "recall": 0.93,
+      "f1": 0.906,
+      "roc_auc": 0.942
+    },
+    "baseline_run_rate": {
+      "precision": 0.518,
+      "recall": 0.754,
+      "f1": 0.614,
+      "roc_auc": 0.61
+    }
+  }
+}
