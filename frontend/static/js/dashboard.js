@@ -35,7 +35,7 @@ function renderCharts(data) {
     options: {
       indexAxis: "y",
       maintainAspectRatio: false,
-      scales: { x: { ticks: { callback: (v) => money(v) } } },
+      scales: { x: { ticks: { callback: (v) => money(v) } }, y: { ticks: { autoSkip: false } } },
       plugins: { tooltip: { callbacks: { label: (ctx) => `${ctx.dataset.label}: ${money(ctx.raw)}` } } },
     },
   });

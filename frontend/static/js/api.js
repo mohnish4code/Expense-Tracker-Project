@@ -26,7 +26,8 @@ async function api(path, { method = "GET", body, redirectOn401 = true } = {}) {
 }
 
 function money(value) {
-  return "₹" + Number(value).toLocaleString("en-IN", { maximumFractionDigits: 0 });
+  const amount = Math.abs(Number(value)).toLocaleString("en-IN", { maximumFractionDigits: 0 });
+  return (value < 0 ? "-₹" : "₹") + amount;
 }
 
 function monthLabel(year, month) {
