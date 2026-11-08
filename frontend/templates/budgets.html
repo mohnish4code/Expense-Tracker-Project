@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Budgets · Expense Tracker{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Budgets</h1>
+  <label class="inline">Month <input type="month" id="budget-month"></label>
+</div>
+
+<section class="card">
+  <h2>Set a budget</h2>
+  <form id="budget-form" class="form-grid">
+    <label>Category
+      <select name="category" required>
+        {% for c in categories %}<option>{{ c }}</option>{% endfor %}
+      </select>
+    </label>
+    <label>Amount (₹) <input type="number" name="amount" min="1" step="1" required></label>
+    <div class="actions">
+      <button type="submit">Save</button>
+      <button type="button" id="apply-recs" class="secondary">Use recommended budgets</button>
+    </div>
+  </form>
+  <p id="budget-message" class="message" hidden></p>
+</section>
+
+<section class="card">
+  <h2 id="budget-title">Budgets</h2>
+  <div class="table-wrap"><table id="budget-table">
+    <thead><tr><th>Category</th><th class="num">Budget</th><th class="num">Spent</th><th class="num">Usage</th></tr></thead>
+    <tbody></tbody>
+  </table></div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="/static/js/budgets.js"></script>{% endblock %}

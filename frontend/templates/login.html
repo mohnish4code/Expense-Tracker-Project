@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ "Sign in" if mode == "login" else "Create account" }} · Expense Tracker{% endblock %}
+{% block content %}
+<section class="auth card">
+  <h1>{{ "Sign in" if mode == "login" else "Create account" }}</h1>
+  <form id="auth-form" data-mode="{{ mode }}">
+    <label>Username
+      <input name="username" autocomplete="username" required minlength="3" maxlength="30">
+    </label>
+    <label>Password
+      <input name="password" type="password" autocomplete="{{ 'current-password' if mode == 'login' else 'new-password' }}" required minlength="6">
+    </label>
+    <p class="error" id="auth-error" hidden></p>
+    <button type="submit">{{ "Sign in" if mode == "login" else "Create account" }}</button>
+  </form>
+  {% if mode == "login" %}
+  <p class="muted">No account? <a href="/register">Create one</a>. Demo login: <code>demo</code> / <code>demo123</code></p>
+  {% else %}
+  <p class="muted">Already registered? <a href="/login">Sign in</a></p>
+  {% endif %}
+</section>
+{% endblock %}
+{% block scripts %}<script src="/static/js/auth.js"></script>{% endblock %}

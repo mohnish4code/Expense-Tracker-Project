@@ -4,10 +4,11 @@ from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from backend import auth, startup
 from backend.db import DEFAULT_DATABASE_URL, make_session_factory
-from backend.routers import budgets, expenses, insights, predict
+from backend.routers import budgets, expenses, insights, pages, predict
 from expense_tracker.config import MODELS_DIR, RESULTS_DIR
 
 
@@ -36,4 +37,6 @@ def create_app(database_url=None, secret_key=None, models_dir=MODELS_DIR, result
     app.include_router(budgets.router)
     app.include_router(insights.router)
     app.include_router(predict.router)
+    app.include_router(pages.router)
+    app.mount("/static", StaticFiles(directory=pages.FRONTEND_DIR / "static"), name="static")
     return app

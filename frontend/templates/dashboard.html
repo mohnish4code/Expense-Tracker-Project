@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · Expense Tracker{% endblock %}
+{% block content %}
+<div class="page-head">
+  <h1>Dashboard</h1>
+  <label class="inline">Month <select id="month-select"></select></label>
+</div>
+
+<p id="empty" class="card muted" hidden>No expenses or budgets yet. <a href="/expenses">Add an expense</a> or <a href="/budgets">set a budget</a>.</p>
+
+<div id="dashboard">
+  <section class="stats">
+    <div class="card stat"><span>Budget</span><strong id="stat-budget">-</strong></div>
+    <div class="card stat"><span>Spent</span><strong id="stat-spent">-</strong></div>
+    <div class="card stat"><span>Remaining</span><strong id="stat-remaining">-</strong></div>
+    <div class="card stat"><span>Usage</span><strong id="stat-usage">-</strong></div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <h2>Spending by category</h2>
+      <div class="chart"><canvas id="category-chart"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>Monthly trend</h2>
+      <div class="chart"><canvas id="trend-chart"></canvas></div>
+    </div>
+  </section>
+
+  <section class="grid-2">
+    <div class="card">
+      <div class="card-head">
+        <h2>Overspend risk</h2>
+        <label class="inline small">as of day
+          <select id="risk-day">
+            <option value="">auto</option>
+            <option>7</option><option>14</option><option>21</option>
+          </select>
+        </label>
+      </div>
+      <p class="muted small" id="risk-note"></p>
+      <div class="table-wrap"><table id="risk-table">
+        <thead><tr><th>Category</th><th class="num">Spent so far</th><th class="num">Budget</th><th>Risk</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h2>Unusual expenses</h2>
+      <ul id="anomaly-list" class="alerts"></ul>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Recommended budgets</h2>
+    <div class="table-wrap"><table id="rec-table">
+      <thead><tr><th>Category</th><th class="num">Recommended</th><th>Why</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.6.1/chart.umd.min.js"></script>
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}
