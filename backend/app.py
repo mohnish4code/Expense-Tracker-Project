@@ -7,6 +7,7 @@ from fastapi import FastAPI
 
 from backend import auth, startup
 from backend.db import DEFAULT_DATABASE_URL, make_session_factory
+from backend.routers import budgets, expenses
 
 
 def create_app(database_url=None, secret_key=None):
@@ -28,4 +29,6 @@ def create_app(database_url=None, secret_key=None):
     app.state.secret_key = secret_key
 
     app.include_router(auth.router)
+    app.include_router(expenses.router)
+    app.include_router(budgets.router)
     return app
