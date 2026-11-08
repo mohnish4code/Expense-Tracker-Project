@@ -14,6 +14,8 @@ def recommend_budgets(df_expenses, months=RECENT_MONTHS, quantile=QUANTILE):
         return []
 
     latest = df_expenses["Date"].max().to_period("M")
+    first = df_expenses["Date"].min().to_period("M")
+    months = min(months, (latest - first).n + 1)
     periods = pd.period_range(end=latest, periods=months, freq="M")
     spend = monthly_spend(df_expenses)
     spend["Period"] = pd.PeriodIndex.from_fields(year=spend["Year"], month=spend["Month"], freq="M")
@@ -33,7 +35,7 @@ def recommend_budgets(df_expenses, months=RECENT_MONTHS, quantile=QUANTILE):
                 "recommended": recommended,
                 "median": round(float(values.median()), 2),
                 "months": months,
-                "reason": f"{int(quantile * 100)}th percentile of the last {months} months "
+                "reason": f"{int(quantile * 100)}th percentile of the last {months} month{'s' if months > 1 else ''} "
                 f"(median {values.median():,.0f}, highest {values.max():,.0f})",
             }
         )
