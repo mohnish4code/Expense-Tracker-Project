@@ -51,6 +51,8 @@ def flag_anomalies(anomaly_model, df):
     df = df.copy()
     stats = anomaly_model["recurring_stats"]
     fixed = df["Is Recurring"].astype(bool) | df["Category"].isin(anomaly_model["recurring_categories"])
+    # recurring payments in a category with no recurring history fall back to the model
+    fixed &= df["Category"].isin(stats.index)
 
     df["Anomaly"] = False
     df["Reason"] = ""
@@ -58,20 +60,18 @@ def flag_anomalies(anomaly_model, df):
     if fixed.any():
         rows = df[fixed]
         median = rows["Category"].map(stats["median"])
-        scale = rows["Category"].map(stats["scale"])
-        z = (rows["Amount"] - median) / scale
-        known = median.notna()
-        df.loc[rows.index, "Anomaly"] = known & (z.abs() > RECURRING_Z_LIMIT)
-        df.loc[rows.index[known], "Reason"] = [
-            f"usual recurring amount is {m:,.0f}" for m in median[known]
-        ]
+        z = (rows["Amount"] - median) / rows["Category"].map(stats["scale"])
+        df.loc[fixed, "Anomaly"] = z.abs() > RECURRING_Z_LIMIT
+        df.loc[fixed, "Reason"] = [f"usual recurring amount is {m:,.0f}" for m in median]
 
     variable = ~fixed
     if variable.any():
         pipeline = anomaly_model["pipeline"]
         rows = df.loc[variable, ANOMALY_FEATURES]
         df.loc[variable, "Anomaly"] = pipeline.predict(rows) == -1
-        medians = rows["Category"].map(pipeline.named_steps["preprocess"].named_transformers_["amount"].stats_["median"])
+        medians = rows["Category"].map(
+            pipeline.named_steps["preprocess"].named_transformers_["amount"].stats_["median"]
+        )
         df.loc[variable, "Reason"] = [
             f"{a / m:.1f}x the usual {c} amount" if pd.notna(m) else "unfamiliar category"
             for a, m, c in zip(rows["Amount"], medians, rows["Category"], strict=True)
