@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.base import BaseEstimator, TransformerMixin
 
 from expense_tracker.data import monthly_spend
 
@@ -16,6 +17,38 @@ OVERSPEND_FEATURES = [
     "Daily Run Rate",
     "Prev Month Ratio",
 ]
+
+
+ANOMALY_FEATURES = ["Category", "Amount", "Payment Method"]
+
+
+def robust_stats(df_expenses):
+    """Median and MAD-based scale of Amount per category."""
+    grouped = df_expenses.groupby("Category")["Amount"]
+    median = grouped.median()
+    mad = grouped.apply(lambda s: (s - s.median()).abs().median())
+    # floor the scale so fixed amounts (MAD = 0) don't give infinite z-scores
+    scale = np.maximum(1.4826 * mad, 0.05 * median).clip(lower=1.0)
+    return pd.DataFrame({"median": median, "scale": scale})
+
+
+class CategoryAmountFeatures(BaseEstimator, TransformerMixin):
+    """Amount relative to its own category: ratio to median, robust z-score, log amount."""
+
+    def fit(self, X, y=None):
+        self.stats_ = robust_stats(X)
+        self.global_median_ = float(X["Amount"].median())
+        self.global_scale_ = float(self.stats_["scale"].median())
+        return self
+
+    def transform(self, X):
+        median = X["Category"].map(self.stats_["median"]).fillna(self.global_median_).astype(float)
+        scale = X["Category"].map(self.stats_["scale"]).fillna(self.global_scale_).astype(float)
+        amount = X["Amount"].astype(float)
+        return np.column_stack([amount / median, (amount - median) / scale, np.log1p(amount)])
+
+    def get_feature_names_out(self, input_features=None):
+        return np.array(["amount_to_median", "robust_z", "log_amount"])
 
 
 def cutoff_features(df_expenses, budgets, cutoff_day):
