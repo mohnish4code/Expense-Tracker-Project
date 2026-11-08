@@ -76,7 +76,8 @@ def test_insights_math(client):
     client.post("/api/budgets", json={"category": "Transport", "year": 2024, "month": 3, "amount": 4000})
     client.post("/api/budgets", json={"category": "Food & Groceries", "year": 2024, "month": 3, "amount": 10000})
     for category, amount, day in [("Transport", 1000, 2), ("Transport", 500, 9), ("Food & Groceries", 12000, 4)]:
-        client.post("/api/expenses", json={**EXPENSE, "category": category, "amount": amount, "date": f"2024-03-0{day}"})
+        expense = {**EXPENSE, "category": category, "amount": amount, "date": f"2024-03-0{day}"}
+        client.post("/api/expenses", json=expense)
     client.post("/api/expenses", json={**EXPENSE, "date": "2024-04-01", "amount": 999})
 
     data = client.get("/api/insights/2024/3").json()

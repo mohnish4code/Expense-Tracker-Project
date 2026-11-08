@@ -10,9 +10,7 @@ def models():
 
 
 def check(models, category, amount, recurring=False, payment="Cash"):
-    df = pd.DataFrame(
-        [{"Category": category, "Amount": amount, "Payment Method": payment, "Is Recurring": recurring}]
-    )
+    df = pd.DataFrame([{"Category": category, "Amount": amount, "Payment Method": payment, "Is Recurring": recurring}])
     return flag_anomalies(models["anomaly"], df).iloc[0]
 
 
