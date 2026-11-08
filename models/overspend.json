@@ -1,0 +1,33 @@
+{
+  "name": "overspend",
+  "sklearn_version": "1.9.1",
+  "trained_at": "2026-11-08T09:13:37+00:00",
+  "features": [
+    "Category",
+    "Budget",
+    "Spend To Date",
+    "Spend Ratio",
+    "Days Elapsed",
+    "Days Remaining",
+    "Daily Run Rate",
+    "Prev Month Ratio"
+  ],
+  "metrics": {
+    "train_rows": 378,
+    "test_rows": 126,
+    "train_positive_rate": 0.476,
+    "test_positive_rate": 0.452,
+    "model": {
+      "precision": 0.883,
+      "recall": 0.93,
+      "f1": 0.906,
+      "roc_auc": 0.942
+    },
+    "baseline_run_rate": {
+      "precision": 0.518,
+      "recall": 0.754,
+      "f1": 0.614,
+      "roc_auc": 0.61
+    }
+  }
+}
